@@ -28,5 +28,5 @@ dependencies:
   - numba
   - pip
   - pip:
-      - -e ./pyphi
+      - git+https://github.com/wmayner/pyphi.git@6db89a08977669a970c9cecd4f38f3b911e546ad
       - -e ./tutorial_functions
