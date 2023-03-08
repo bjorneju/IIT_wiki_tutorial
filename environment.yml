@@ -1,0 +1,32 @@
+name: iit_tutorial
+channels:
+  - conda-forge
+  - defaults
+  - numba
+dependencies:
+  - python=3.10
+  - ipython
+  - ipywidgets
+  - jupyterlab
+  - jupyterlab-lsp
+  - python-lsp-server
+  - nodejs
+  - black
+  - blackcellmagic
+  - numpy
+  - pandas
+  - networkx
+  - python-graphviz
+  - pydot
+  - toolz
+  - pyarrow
+  - matplotlib
+  - seaborn
+  - colorcet
+  - plotly
+  - imageio
+  - numba
+  - pip
+  - pip:
+      - -e ./pyphi
+      - -e ./tutorial_functions
