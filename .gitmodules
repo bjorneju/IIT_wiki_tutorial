@@ -1,0 +1,3 @@
+[submodule "pyphi"]
+	path = pyphi
+	url = https://github.com/wmayner/pyphi.git
