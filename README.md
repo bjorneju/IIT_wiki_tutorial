@@ -13,7 +13,7 @@ To get started working with this tutorial on your own, please open your terminal
 3) clone this repo with `git clone https://github.com/bjorneju/IIT_wiki_tutorial.git`
 4) step into the folder using `cd IIT_wiki_tutorial`
 5) create a new environment using `conda env create -f environment.yml` 
-6) activate your environment using `conda activate wiki`
+6) activate your environment using `conda activate iit_tutorial`
 7) and browse the notebooks!
 
 
