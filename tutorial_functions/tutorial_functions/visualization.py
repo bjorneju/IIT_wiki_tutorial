@@ -402,35 +402,6 @@ def get_candidate_distinction(
 
 ##### Visualization
 
-def show_tpm(tpm, past_labels=None, future_labels=None, style="pandas", caption=None):
-    
-    if len(tpm.shape)>2:
-        tpm = pyphi.convert.sbn2sbs(tpm)
-
-    
-    past_states = list(pyphi.utils.all_states(len(past_labels)))
-    future_states = list(pyphi.utils.all_states(len(future_labels)))
-
-    assert (
-        len(past_states),
-        len(future_states),
-    ) == tpm.shape, "mismatch in TPM shape and labels provided."
-
-    if style == "pandas":
-
-        columns = pd.MultiIndex.from_tuples(future_states, names=future_labels)
-        index = pd.MultiIndex.from_tuples(past_states, names=past_labels)
-
-        TPM = pd.DataFrame(tpm, index=index, columns=columns)
-        (TPM.style.background_gradient(cmap="gray_r", low=0, high=1, axis=None)
-            .format(precision=2)
-            .set_caption(
-                f'TPM from the past state of {"".join(past_labels)} to the future state of {"".join(future_labels)}.'
-                if caption == None
-                else caption
-            ))
-        return TPM
-
 def highlight_cell(col, col_label, row_label, color="lightblue"):
    # check if col is a column we want to highlight
     if col.name == col_label:
@@ -449,14 +420,6 @@ def highlight_cell(col, col_label, row_label, color="lightblue"):
 def highlight_transition_probability(TPM,input_state, output_state, color="lightblue"):
     return TPM.style.apply(highlight_cell, col_label=output_state, row_label=input_state, color=color)
     
-def network_tpm(network):
-    return show_tpm(
-        network.tpm, 
-        past_labels=network.node_labels, 
-        future_labels=network.node_labels, 
-        style="pandas", 
-        caption='The full TPM of the substrate {}'.format([l for l in network.node_labels])
-    )
     
 def plot_repertoire(ax, repertoire, states, stagger=0, color="black"):
 
