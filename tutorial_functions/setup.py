@@ -8,7 +8,7 @@ setup(
     author="Bjørn E juel",
     author_email="bjorneju@gmail.com",
     license="BSD 2-clause",
-    packages=["units"],
+    packages=["tutorial_functions"],
     install_requires=[
         "tqdm",
         "numpy",
