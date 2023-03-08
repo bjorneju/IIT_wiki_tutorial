@@ -8,7 +8,7 @@ For those of you interested in learning more, we strongly encourage you to head 
 To get started on your own, please open your terminal and: 
 1) make sure you have anaconda installed with a fresh base environment
 2) navigate to a folder where you would like to add the tutorial files
-3) clone this repo with `and run the command `git clone https://github.com/bjorneju/IIT_wiki_tutorial.git`
+3) clone this repo with `git clone https://github.com/bjorneju/IIT_wiki_tutorial.git`
 4) step into the folder using `cd IIT_wiki_tutorial`
 5) create a new environment using `conda env create -f environment.yml` 
 6) activate your environment using `conda activate wiki`
