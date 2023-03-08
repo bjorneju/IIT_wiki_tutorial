@@ -5,7 +5,14 @@ This repository is intended as tutorial to understand what is happening under th
 
 For those of you interested in learning more, we strongly encourage you to head over to our wiki to learn more, read the academic papers (for example starting [here](https://arxiv.org/abs/2212.14787)), get acquainted with the latest version of pyphi (see documentation and examples for getting started [here](https://pyphi.readthedocs.io/en/latest/index.html)), browse other resources  online (for example [here](https://www.youtube.com/watch?v=0hex5katLGk&t=1630s) or [here](https://www.youtube.com/watch?v=FIZzxhJXJns)), or get in touch with us. 
 
+To get started on your own, please open your terminal and: 
+1) make sure you have anaconda installed with a fresh base environment
+2) navigate to a folder where you would like to add the tutorial files
+3) clone this repo with `and run the command `git clone https://github.com/bjorneju/IIT_wiki_tutorial.git`
+4) step into the folder using `cd IIT_wiki_tutorial`
+5) create a new environment using `conda env create -f environment.yml` 
+6) activate your environment using `conda activate wiki`
+7) and browse the notebooks!
+
+
 Hope you enjoy!
-
-
-To get started, please make sure you have anaconda installed with a fresh base environment and run the command `conda env create -f environment.yml` before trying to run the notebooks in this tutorial. 
