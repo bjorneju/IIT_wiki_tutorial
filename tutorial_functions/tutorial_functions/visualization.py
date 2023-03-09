@@ -5,6 +5,8 @@ import pandas as pd
 import string
 import pyphi
 
+from . import utils
+
 CAUSE = pyphi.direction.Direction.CAUSE  
 EFFECT = pyphi.direction.Direction.EFFECT 
 
@@ -137,7 +139,58 @@ def grid_1d_nearest_neighbor(
     )
 
 
+### TPM visualizations
+def tpm_probabilities(TPM, caption=''):
+    return (
+        TPM.style.background_gradient(cmap="gray_r", low=0, high=1, axis=None)
+        .format(precision=2)
+        .set_caption(caption)
+    )
+
+def substrate_state_by_state(substrate):
+    TPM = utils.state_by_state_tpm(substrate)
+    caption = f'State by state TPM for {"".join(list(substrate.node_labels))}.'
+    return tpm_probabilities(TPM, caption)
+
+def substrate_state_by_node(substrate):
+    TPM = utils.state_by_node_tpm(substrate)
+    caption = f'State by node TPM for {"".join(list(substrate.node_labels))}.'
+    return tpm_probabilities(TPM, caption)
+
+def unit_state_by_node(substrate,unit):
+    TPM = utils.unit_tpm(substrate,unit)
+    caption = f'State by node TPM for {"".join(list(substrate.node_labels))}.'
+    return tpm_probabilities(TPM, caption)
+
+
+def highlight_cell(col, col_label, row_label, color="lightblue"):
+   # check if col is a column we want to highlight
+    if col.name == col_label:
+        # a boolean mask where True represents a row we want to highlight
+        mask = (col.index == row_label)
+        # return a list of string styles (e.g. ["", "background-color: yellow"])
+        return [
+            'background-color: {}'.format(color)
+            if val_bool else ""
+            for val_bool in mask
+        ]
+    else:
+        # return an array of empty strings that has the same size as col (e.g. ["",""])
+        return np.full_like(col, "", dtype="str")
+
+def highlight_transition_probability(TPM,input_state, output_state, color="lightblue"):
+    return TPM.style.apply(highlight_cell, col_label=output_state, row_label=input_state, color=color)
+    
+def constrained_repertoire(substrate, input_state):
+    TPM = utils.state_by_state_tpm(substrate)
+    return TPM.loc[input_state].plot.bar(
+        ylabel='transition probability', 
+        ylim=[0,1], 
+        title='Transition probabilities constrained to the input state {}'.format(input_state)
+    )
+
 #### UTILS 
+
 def get_unit_tpm(network, unit_id):
 
     # run "experiment"
@@ -401,26 +454,6 @@ def get_candidate_distinction(
 
 
 ##### Visualization
-
-def highlight_cell(col, col_label, row_label, color="lightblue"):
-   # check if col is a column we want to highlight
-    if col.name == col_label:
-        # a boolean mask where True represents a row we want to highlight
-        mask = (col.index == row_label)
-        # return a list of string styles (e.g. ["", "background-color: yellow"])
-        return [
-            'background-color: {}'.format(color)
-            if val_bool else ""
-            for val_bool in mask
-        ]
-    else:
-        # return an array of empty strings that has the same size as col (e.g. ["",""])
-        return np.full_like(col, "", dtype="str")
-
-def highlight_transition_probability(TPM,input_state, output_state, color="lightblue"):
-    return TPM.style.apply(highlight_cell, col_label=output_state, row_label=input_state, color=color)
-    
-    
 def plot_repertoire(ax, repertoire, states, stagger=0, color="black"):
 
     xaxis = np.array(range(len(repertoire)))
