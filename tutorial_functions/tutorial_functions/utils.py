@@ -80,7 +80,7 @@ def unit_state_by_state_tpm(network, unit):
         return
     
     tpm = pyphi.convert.to_2d(network.tpm)[:,ix]
-    tpm = np.squeeze(np.dstack((tpm,1-tpm)))
+    tpm = np.squeeze(np.dstack((1-tpm,tpm)))
     
     past_labels=list(network.node_labels)
     past_states = list(pyphi.utils.all_states(len(past_labels)))
@@ -147,7 +147,7 @@ def all_constrained_probability(substrate):
             constrained_probability(substrate,output_state,input_state)
             for output_state in pyphi.utils.all_states(len(substrate.node_labels))
         ]
-        for input_state in reversed(list(pyphi.utils.all_states(len(substrate.node_labels))))
+        for input_state in pyphi.utils.all_states(len(substrate.node_labels))
     ]
     return state_by_state_tpm(substrate,data=P)
 
@@ -157,6 +157,30 @@ def all_unconstrained_probability(substrate):
             unconstrained_probability(substrate,output_state)
             for output_state in pyphi.utils.all_states(len(substrate.node_labels))
         ]
-        for input_state in reversed(list(pyphi.utils.all_states(len(substrate.node_labels))))
+        for input_state in pyphi.utils.all_states(len(substrate.node_labels))
     ]
     return state_by_state_tpm(substrate,data=P)
+
+
+def transition_informativeness_matrix(substrate):
+    informativeness = [
+        [
+            np.log2(
+                constrained_probability(substrate,output_state,input_state)/
+                unconstrained_probability(substrate,output_state)
+            )
+            for output_state in pyphi.utils.all_states(len(substrate.node_labels))
+        ]
+        for input_state in pyphi.utils.all_states(len(substrate.node_labels))
+    ]
+    return state_by_state_tpm(substrate,data=informativeness)
+
+def potential_causes(substrate,current_state,step):
+    if step=='existence':
+        TIM = transition_informativeness_matrix(substrate)
+        return list(TIM.loc[TIM.loc[current_state]>0].index)
+
+def potential_effects(substrate,current_state,step):
+    if step=='existence':
+        TIM = transition_informativeness_matrix(substrate)
+        return list(TIM[TIM[current_state]>0].index)

@@ -140,9 +140,9 @@ def grid_1d_nearest_neighbor(
 
 
 ### TPM visualizations
-def tpm_probabilities(TPM, caption=''):
+def tpm_probabilities(TPM, caption='',cmap="gray_r", low=0, high=1):
     return (
-        TPM.style.background_gradient(cmap="gray_r", low=0, high=1, axis=None)
+        TPM.style.background_gradient(cmap=cmap, vmin=low, vmax=high, axis=None)
         .format(precision=2)
         .set_caption(caption)
     )
@@ -159,9 +159,17 @@ def substrate_state_by_node(substrate):
 
 def unit_state_by_node(substrate,unit):
     TPM = utils.unit_tpm(substrate,unit)
-    caption = f'State by node TPM for {"".join(list(substrate.node_labels))}.'
+    caption = f'Unit state-by-node matrix for {unit}.'
     return tpm_probabilities(TPM, caption)
 
+def transition_informativeness_matrix(substrate):
+    TIM = utils.transition_informativeness_matrix(substrate)
+    mx = TIM.max().max()
+    mn = TIM.min().min()
+    lim = np.max(np.abs([mn,mx]))
+    
+    caption = f'Informativeness matrix for {"".join(list(substrate.node_labels))}.'
+    return tpm_probabilities(TIM, caption,cmap="hot", low=0, high=mx)
 
 def highlight_cell(col, col_label, row_label, color="lightblue"):
    # check if col is a column we want to highlight
@@ -177,10 +185,38 @@ def highlight_cell(col, col_label, row_label, color="lightblue"):
     else:
         # return an array of empty strings that has the same size as col (e.g. ["",""])
         return np.full_like(col, "", dtype="str")
+    
+def highlight_cells(col, current_state, col_labels, row_labels):
+   # check if col is  our current state
+    if col.name == current_state:
+        # a boolean mask where True represents a row we want to highlight
+        mask = (col.index.isin(row_labels))
+        # return a list of string styles (e.g. ["", "background-color: yellow"])
+        return [
+            'background-color: {}'.format('red')
+            if val_bool else ""
+            for val_bool in mask
+        ]
+    elif col.name in col_labels:
+        # a boolean mask where True represents a row we want to highlight
+        
+        mask = (col.index == current_state)
+        # return a list of string styles (e.g. ["", "background-color: yellow"])
+        return [
+            'background-color: {}'.format('green')
+            if val_bool else ""
+            for val_bool in mask
+        ]
+    else:
+        # return an array of empty strings that has the same size as col (e.g. ["",""])
+        return np.full_like(col, "", dtype="str")
 
 def highlight_transition_probability(TPM,input_state, output_state, color="lightblue"):
     return TPM.style.apply(highlight_cell, col_label=output_state, row_label=input_state, color=color)
     
+def highlight_potential_causes_and_effects(TPM, current_state, potential_causes, potential_effects):
+    return TPM.style.apply(highlight_cells, current_state=current_state, col_labels=potential_causes, row_labels=potential_effects)
+
 def constrained_repertoire(substrate, input_state):
     TPM = utils.state_by_state_tpm(substrate)
     return TPM.loc[input_state].plot.bar(
