@@ -230,3 +230,50 @@ def assess_existence(substrate, current_state):
             flush=True
         )
         return 
+    
+    
+### Basic unfolding
+def remove_overlapping_complexes(complexes, max_complex):
+    non_overlapping_complexes = [comp for comp in complexes if not any([u in max_complex.cause.mechanism for u in comp.cause.mechanism])]
+    return non_overlapping_complexes
+
+def all_complexes(substrate, state):
+    complexes = list(pyphi.new_big_phi.all_complexes(substrate,state))
+    maximal_complexes = []
+    i = 0
+    while len(complexes)>0 and i<10:
+        max_complex = max(complexes)
+        maximal_complexes.append(max_complex)
+        
+        complexes = remove_overlapping_complexes(complexes, max_complex)
+        i+=1
+    
+    print('This substrate comprises {} complexes. \n{}'.format(
+        len(maximal_complexes),
+        ' and '.join([''.join([c.node_labels[i] for i in c.cause.mechanism]) for c in maximal_complexes])
+    )) 
+    return maximal_complexes
+
+def unfold_phi_structures(substrate,state,complexes):
+    
+    phi_structures = [
+        pyphi.new_big_phi.phi_structure(
+            subsystem=pyphi.subsystem.Subsystem(
+                substrate,state,sia.cause.mechanism
+            ),
+            sia=sia,
+            ces_kwargs=dict(parallel=False),
+            relations_kwargs=dict(parallel=False),
+        )
+        for sia in complexes
+    ]
+    
+    for structure in phi_structures:
+        print('{}\'s structure has {} distinction(s) and {} relation(s), with \u03A6={}'.format(
+            ''.join([structure.sia.node_labels[i] for i in structure.sia.cause.mechanism]),
+            len(structure.distinctions),
+            len(structure.relations),
+            np.round(structure.big_phi,3)
+        ), flush=True)
+    
+    return phi_structures
