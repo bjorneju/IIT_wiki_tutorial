@@ -13,6 +13,15 @@ def pandas_tpm(tpm, input_labels, output_labels ):
 
     return pd.DataFrame(tpm, index=index, columns=columns)
 
+def repertoire(substrate, data):
+
+    future_labels=list(substrate.node_labels) 
+    future_states = list(pyphi.utils.all_states(len(future_labels)))
+
+    index = pd.MultiIndex.from_tuples(future_states, names=future_labels)
+
+    return pd.Series(data, index=index)
+
 
 def state_by_state_tpm(network,data=False):
     
@@ -161,6 +170,20 @@ def all_unconstrained_probability(substrate):
     ]
     return state_by_state_tpm(substrate,data=P)
 
+def constrained_repertoire(substrate, input_state):
+    P = [
+            constrained_probability(substrate,output_state,input_state)
+            for output_state in pyphi.utils.all_states(len(substrate.node_labels))
+        ]
+    return repertoire(substrate,P)
+
+def unconstrained_repertoire(substrate):
+    P = [
+            unconstrained_probability(substrate,output_state)
+            for output_state in pyphi.utils.all_states(len(substrate.node_labels))
+        ]
+    return repertoire(substrate,P)
+
 
 def transition_informativeness_matrix(substrate):
     informativeness = [
@@ -175,12 +198,35 @@ def transition_informativeness_matrix(substrate):
     ]
     return state_by_state_tpm(substrate,data=informativeness)
 
-def potential_causes(substrate,current_state,step):
+def potential_causes(substrate,current_state,step,**kwargs):
     if step=='existence':
         TIM = transition_informativeness_matrix(substrate)
         return list(TIM.loc[TIM.loc[current_state]>0].index)
 
-def potential_effects(substrate,current_state,step):
+def potential_effects(substrate,current_state,step,**kwargs):
     if step=='existence':
         TIM = transition_informativeness_matrix(substrate)
         return list(TIM[TIM[current_state]>0].index)
+    
+    
+def assess_existence(substrate, current_state):
+    potential_cause_states = potential_causes(substrate,current_state,'existence')
+    potential_effect_states = potential_effects(substrate,current_state,'existence')
+    
+    potential_cause_states = [''.join([str(s)  for s in potential_cause]) for potential_cause in potential_cause_states]
+    potential_effect_states = [''.join([str(s)  for s in potential_effect]) for potential_effect in potential_effect_states]
+    
+    if len(potential_cause_states)>0 and len(potential_effect_states)>0:
+        print(
+            'The substrate {} in state {} satisfies existence! \n'.format(
+                ''.join([l for l in substrate.node_labels]), ''.join([str(s) for s in current_state])
+            )+
+            'It has potentially takes a difference from {}. \n'.format(
+                ' or '.join([str(potential_cause) for potential_cause in potential_cause_states])
+            )+
+            'And it potentially makes a difference to {}.'.format(
+                ' or '.join([str(potential_effect) for potential_effect in potential_effect_states])
+            ),
+            flush=True
+        )
+        return 

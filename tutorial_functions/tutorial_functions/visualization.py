@@ -490,7 +490,7 @@ def get_candidate_distinction(
 
 
 ##### Visualization
-def plot_repertoire(ax, repertoire, states, stagger=0, color="black"):
+def plot_repertoire(ax, repertoire, states, stagger=0, color="black",label=""):
 
     xaxis = np.array(range(len(repertoire)))
 
@@ -503,9 +503,10 @@ def plot_repertoire(ax, repertoire, states, stagger=0, color="black"):
 
     ax.bar(xaxis - stagger, repertoire, width=0.7, color=color)
 
-    ax.set_xticks(xaxis, purview_states, rotation=90)
+    ax.set_xticks(xaxis, states, rotation=90)
     ax.set_yticks([0, 0.5, 1.0])
     ax.set_ylim([-0.1, 1.1])
+    ax.set_label=label
 
     return ax
 
@@ -617,7 +618,7 @@ def cause_repertoire_information(subsystem, mechanism, purview):
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
     ax = plot_repertoire(ax, cut_repertoire, purview_states, stagger=0.1, color="gray")
-    ax = plot_repertoire(ax, repertoire, purview_states, stagger=0.0)
+    ax = plot_repertoire(ax, repertoire, purview_states, stagger=0.0);
     return fig
 
 
@@ -643,4 +644,27 @@ def effect_repertoire_information(subsystem, mechanism, purview):
     ax = fig.add_subplot(1, 1, 1)
     ax = plot_repertoire(ax, cut_repertoire, purview_states, stagger=0.1, color="gray")
     ax = plot_repertoire(ax, repertoire, purview_states, stagger=0.0)
+    return fig
+
+
+def repertoires(substrate, input_state):
+    
+    constrained_repertoire = utils.constrained_repertoire(substrate, input_state)
+    unconstrained_repertoire = utils.unconstrained_repertoire(substrate)
+    
+    output_states = list(constrained_repertoire.index)
+    
+    # plotting first histogram
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1, 1)
+    ax = plot_repertoire(ax, unconstrained_repertoire.to_numpy(), output_states, stagger=0.2, color="gray",label="unconstrained")
+    ax = plot_repertoire(ax, constrained_repertoire.to_numpy(), output_states, stagger=0.0, color="blue",label="constrained")
+    
+    ax.legend(["unconstrained","constrained"])
+    ax.set_ylabel('Probability')
+    ax.set_xlabel('Output states')
+    ax.set_title('Constrained and unconstrained probabilities for {} in {}'.format(
+        ''.join([l for l in substrate.node_labels]),''.join([str(s) for s in input_state])
+    ))
+    
     return fig
