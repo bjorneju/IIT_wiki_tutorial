@@ -1,5 +1,5 @@
 # Isolating Complexes and Unfolding $\Phi$-structures
-## A part of the [IIT wiki](https://centerforsleepandconsciousness.psychiatry.wisc.edu/intrinsic-ontology-wiki/)
+## Supporting Materials for the [IIT wiki](https://centerforsleepandconsciousness.psychiatry.wisc.edu/intrinsic-ontology-wiki/)
 ---
 This repository provides the supporting material for the "unfolding tutorial" within the [IIT wiki](https://centerforsleepandconsciousness.psychiatry.wisc.edu/intrinsic-ontology-wiki/). 
 It is intended to help you understand what is happening "under the hood" in the process for isolating complexes and unfolding $\Phi$-structures within the integrated information theory (IIT). 
