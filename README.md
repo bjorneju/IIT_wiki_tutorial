@@ -1,4 +1,4 @@
-# Isolating complexes and unfolding $\Phi$-structures
+# Isolating Complexes and Unfolding $\Phi$-structures
 ## A part of the [IIT wiki](https://centerforsleepandconsciousness.psychiatry.wisc.edu/intrinsic-ontology-wiki/)
 ---
 This repository provides the supporting material for the "unfolding tutorial" within the [IIT wiki](https://centerforsleepandconsciousness.psychiatry.wisc.edu/intrinsic-ontology-wiki/). 
