@@ -14,12 +14,13 @@ And take a look at the our lab website ([the Center for Sleep and Consciousness]
 
 To get started working with this tutorial on your own, please open your terminal and: 
 
-1) make sure you have anaconda installed with a fresh base environment
-2) navigate to a folder where you would like to add the tutorial files
-3) clone this repo with `git clone https://github.com/bjorneju/IIT_wiki_tutorial.git`
+1) make sure you have anaconda and git installed with a fresh base environment
+2) in your terminal navigate to a folder where you would like to add the tutorial files
+3) clone this repository with `git clone https://github.com/bjorneju/IIT_wiki_tutorial.git`
 4) step into the folder using `cd IIT_wiki_tutorial`
-5) create a new environment using `conda env create -f environment.yml` 
+5) create a new environment using `conda env create -f environment.yml` (this step takes some time)
 6) activate your environment using `conda activate iit_tutorial`
-7) and browse the notebooks!
+7) open a jupyter lab session, and open the adress associated with the jupyter lab session (i.e. `http://localhost:8892/`)
+8) and browse the notebooks!
 
 Hope you enjoy the experience!
