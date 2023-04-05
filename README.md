@@ -20,7 +20,7 @@ To get started working with this tutorial on your own, please open your terminal
 4) step into the folder using `cd IIT_wiki_tutorial`
 5) create a new environment using `conda env create -f environment.yml` (this step takes some time)
 6) activate your environment using `conda activate iit_tutorial`
-7) open a jupyter lab session, and open the adress associated with the jupyter lab session (i.e. `http://localhost:8892/`)
+7) open a jupyter lab session, and open the adress associated with the jupyter lab session in your browser (i.e. `http://localhost:8892/`)
 8) and browse the notebooks!
 
 Hope you enjoy the experience!
