@@ -171,50 +171,53 @@ def transition_informativeness_matrix(substrate):
     caption = f'Informativeness matrix for {"".join(list(substrate.node_labels))}.'
     return tpm_probabilities(TIM, caption,cmap="hot", low=0, high=mx)
 
-def highlight_cell(col, col_label, row_label, color="lightblue"):
-   # check if col is a column we want to highlight
-    if col.name == col_label:
-        # a boolean mask where True represents a row we want to highlight
-        mask = (col.index == row_label)
-        # return a list of string styles (e.g. ["", "background-color: yellow"])
-        return [
-            'background-color: {}'.format(color)
-            if val_bool else ""
-            for val_bool in mask
-        ]
-    else:
-        # return an array of empty strings that has the same size as col (e.g. ["",""])
-        return np.full_like(col, "", dtype="str")
-    
-def highlight_cells(col, current_state, col_labels, row_labels):
-   # check if col is  our current state
-    if col.name == current_state:
-        # a boolean mask where True represents a row we want to highlight
-        mask = (col.index.isin(row_labels))
-        # return a list of string styles (e.g. ["", "background-color: yellow"])
-        return [
-            'background-color: {}'.format('red')
-            if val_bool else ""
-            for val_bool in mask
-        ]
-    elif col.name in col_labels:
-        # a boolean mask where True represents a row we want to highlight
-        
-        mask = (col.index == current_state)
-        # return a list of string styles (e.g. ["", "background-color: yellow"])
-        return [
-            'background-color: {}'.format('green')
-            if val_bool else ""
-            for val_bool in mask
-        ]
-    else:
-        # return an array of empty strings that has the same size as col (e.g. ["",""])
-        return np.full_like(col, "", dtype="str")
 
 def highlight_transition_probability(TPM,input_state, output_state, color="lightblue"):
+
+    def highlight_cell(col, col_label, row_label, color="lightblue"):
+       # check if col is a column we want to highlight
+        if col.name == col_label:
+            # a boolean mask where True represents a row we want to highlight
+            mask = (col.index == row_label)
+            # return a list of string styles (e.g. ["", "background-color: yellow"])
+            return [
+                'background-color: {}'.format(color)
+                if val_bool else ""
+                for val_bool in mask
+            ]
+        else:
+            # return an array of empty strings that has the same size as col (e.g. ["",""])
+            return np.full_like(col, "", dtype="str")
+        
     return TPM.style.apply(highlight_cell, col_label=output_state, row_label=input_state, color=color)
     
 def highlight_potential_causes_and_effects(TPM, current_state, potential_causes, potential_effects):
+    
+    def highlight_cells(col, current_state, col_labels, row_labels):
+       # check if col is  our current state
+        if col.name == current_state:
+            # a boolean mask where True represents a row we want to highlight
+            mask = (col.index.isin(row_labels))
+            # return a list of string styles (e.g. ["", "background-color: yellow"])
+            return [
+                'background-color: {}'.format('red')
+                if val_bool else ""
+                for val_bool in mask
+            ]
+        elif col.name in col_labels:
+            # a boolean mask where True represents a row we want to highlight
+
+            mask = (col.index == current_state)
+            # return a list of string styles (e.g. ["", "background-color: yellow"])
+            return [
+                'background-color: {}'.format('green')
+                if val_bool else ""
+                for val_bool in mask
+            ]
+        else:
+            # return an array of empty strings that has the same size as col (e.g. ["",""])
+            return np.full_like(col, "", dtype="str")
+
     return TPM.style.apply(highlight_cells, current_state=current_state, col_labels=potential_causes, row_labels=potential_effects)
 
 def constrained_repertoire(substrate, input_state):
